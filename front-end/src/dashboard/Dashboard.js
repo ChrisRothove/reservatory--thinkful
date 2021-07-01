@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import ReservationsList from "../components/ReservationsList";
 import ErrorAlert from "../layout/ErrorAlert";
+import useQuery from "../utils/useQuery";
 
 /**
  * Defines the dashboard page.
@@ -10,6 +11,8 @@ import ErrorAlert from "../layout/ErrorAlert";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
+  const query = useQuery();
+  console.log("🚀 ~ file: Dashboard.js ~ line 15 ~ Dashboard ~ query", query);
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
@@ -28,7 +31,7 @@ function Dashboard({ date }) {
     <main>
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date</h4>
+        <h4 className="mb-0">Reservations for {date}</h4>
       </div>
       <ErrorAlert error={reservationsError} />
       <ReservationsList reservations={reservations} />
