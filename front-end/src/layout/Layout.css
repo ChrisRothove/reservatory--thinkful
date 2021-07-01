@@ -36,6 +36,20 @@ body {
   flex-direction: column;
 }
 
+.resList .buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.resList label {
+  margin: 18px;
+}
+
+.resList input {
+  margin-left: 15px;
+}
+
 .offset {
   margin-left: 30px;
 }

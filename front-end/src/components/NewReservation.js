@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { today } from "../utils/date-time";
 
 export default function NewReservation({ reservation }) {
@@ -11,7 +12,7 @@ export default function NewReservation({ reservation }) {
         mobile_number: "",
         reservation_date: date,
         reservation_time: 0,
-        party_size: 0,
+        party_size: 1,
       };
 
   const [formData, setFormData] = useState({ ...defaultFormData });
@@ -89,7 +90,14 @@ export default function NewReservation({ reservation }) {
           onChange={onChangeHandler}
         ></input>
       </label>
-      <button type="submit">Submit</button>
+      <div className="buttons">
+        <button className="btn btn-success" type="submit">
+          Submit
+        </button>
+        <Link className="btn btn-danger" to="/reservations/">
+          Back
+        </Link>
+      </div>
     </form>
   );
 }
