@@ -12,7 +12,7 @@ export default function NewReservation({ reservation }) {
         mobile_number: "",
         reservation_date: date,
         reservation_time: 0,
-        party_size: 1,
+        people: 1,
       };
 
   const [formData, setFormData] = useState({ ...defaultFormData });
@@ -85,8 +85,8 @@ export default function NewReservation({ reservation }) {
         <input
           type="text"
           id="partySize"
-          name="party_size"
-          value={formData.party_size}
+          name="people"
+          value={formData.people}
           onChange={onChangeHandler}
         ></input>
       </label>
