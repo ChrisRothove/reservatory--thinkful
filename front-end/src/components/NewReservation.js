@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { today } from "../utils/date-time";
+import { addReservation } from "../utils/api";
 
 export default function NewReservation({ reservation }) {
   const date = today();
@@ -23,13 +24,15 @@ export default function NewReservation({ reservation }) {
     setFormData({ ...formData, [event.name]: event.value });
   }
 
-  function submitHandler(e) {
+  async function submitHandler(e) {
     e.preventDefault();
-    console.log(formData);
+    const response = await addReservation(formData);
+    console.log(response);
   }
 
   return (
     <form className="resList form" onSubmit={submitHandler}>
+      <h3>New Reservation</h3>
       <label>
         First Name:
         <input
@@ -38,6 +41,7 @@ export default function NewReservation({ reservation }) {
           name="first_name"
           value={formData.first_name}
           onChange={onChangeHandler}
+          required
         ></input>
       </label>
       <label>
@@ -48,46 +52,53 @@ export default function NewReservation({ reservation }) {
           name="last_name"
           value={formData.last_name}
           onChange={onChangeHandler}
+          required
         ></input>
       </label>
       <label>
         Mobile Number:
         <input
-          type="text"
+          type="tel"
           id="mobileNumber"
           name="mobile_number"
+          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+          placeholder="000-000-0000"
           value={formData.mobile_number}
           onChange={onChangeHandler}
+          required
         ></input>
       </label>
       <label>
         Date:
         <input
-          type="text"
+          type="date"
           id="reservationDate"
           name="reservation_date"
-          value={formData.reservation_date}
           onChange={onChangeHandler}
+          required
         ></input>
       </label>
       <label>
         Time:
         <input
-          type="text"
+          type="time"
           id="reservationTime"
           name="reservation_time"
           value={formData.reservation_time}
           onChange={onChangeHandler}
+          required
         ></input>
       </label>
       <label>
         Party Size:
         <input
-          type="text"
+          type="number"
           id="partySize"
           name="people"
           value={formData.people}
           onChange={onChangeHandler}
+          min="1"
+          required
         ></input>
       </label>
       <div className="buttons">

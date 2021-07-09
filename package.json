@@ -52,6 +52,7 @@
     "nodemon": "^2.0.9"
   },
   "dependencies": {
-    "knex": "^0.95.6"
+    "knex": "^0.95.6",
+    "morgan": "^1.10.0"
   }
 }
