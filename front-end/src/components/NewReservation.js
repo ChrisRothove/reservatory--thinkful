@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { today } from "../utils/date-time";
 import { addReservation } from "../utils/api";
 
 export default function NewReservation({ reservation }) {
+  const history = useHistory();
+
   const date = today();
   const defaultFormData = reservation
     ? reservation
@@ -12,7 +14,7 @@ export default function NewReservation({ reservation }) {
         last_name: "",
         mobile_number: "",
         reservation_date: date,
-        reservation_time: 0,
+        reservation_time: "",
         people: 1,
       };
 
@@ -28,6 +30,7 @@ export default function NewReservation({ reservation }) {
     e.preventDefault();
     const response = await addReservation(formData);
     console.log(response);
+    history.push(`/reservations?date=${formData.reservation_date}`);
   }
 
   return (
@@ -106,7 +109,7 @@ export default function NewReservation({ reservation }) {
           Submit
         </button>
         <Link className="btn btn-danger" to="/reservations/">
-          Back
+          Cancel
         </Link>
       </div>
     </form>
