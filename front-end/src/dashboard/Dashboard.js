@@ -3,8 +3,6 @@ import { listReservations } from "../utils/api";
 import ReservationsList from "../components/ReservationsList";
 import ErrorAlert from "../layout/ErrorAlert";
 import DatePicker from "../components/DatePicker";
-import { formatAsDate, previous, next } from "../utils/date-time";
-import useQuery from "../utils/useQuery";
 
 /**
  * Defines the dashboard page.
@@ -12,18 +10,16 @@ import useQuery from "../utils/useQuery";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date }) {
-  //const query = useQuery();
+function Dashboard({ date, setDate }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [inquiryDate, setInquiryDate] = useState(date);
 
-  useEffect(loadDashboard, [inquiryDate]);
+  useEffect(loadDashboard, [date]);
 
   function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({ date: inquiryDate }, abortController.signal)
+    listReservations({ date: date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
@@ -33,9 +29,9 @@ function Dashboard({ date }) {
     <main>
       <h1>Dashboard</h1>
       <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for {inquiryDate}</h4>
+        <h4 className="mb-0">Reservations for {date}</h4>
       </div>
-      <DatePicker inquiryDate={inquiryDate} setInquiryDate={setInquiryDate} />
+      <DatePicker date={date} setDate={setDate} />
       <ErrorAlert error={reservationsError} />
       <ReservationsList reservations={reservations} />
     </main>

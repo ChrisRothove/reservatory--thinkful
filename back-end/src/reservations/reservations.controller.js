@@ -1,5 +1,6 @@
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const { today } = require("../utils/date-time");
 
 /**~~~~~~~~~~~~~~~~MIDDLEWARE~~~~~~~~~~~~~~~*/
 
@@ -74,6 +75,36 @@ function dateIsValid(req, res, next) {
   }
 }
 
+function notTuesday(req, res, next) {
+  const reservation_date = req.body.data.reservation_date;
+  const inputDate = new Date(reservation_date);
+  if (inputDate.getDay() === 1) {
+    next({
+      status: 400,
+      message: "closed on tuesday",
+    });
+  } else {
+    next();
+  }
+}
+
+function futureDate(req, res, next) {
+  const reservation_date = req.body.data.reservation_date;
+  const inputDate = new Date(reservation_date);
+  // const splitTime = reservation_time.split(":");
+  // inputDate.setHours(splitTime[0], splitTime[1]);
+  const todayDate = new Date(today());
+
+  if (inputDate < todayDate) {
+    next({
+      status: 400,
+      message: "date must be a future or present date/time",
+    });
+  } else {
+    next();
+  }
+}
+
 function hasTime(req, res, next) {
   const reservation_time = req.body.data.reservation_time;
   if (reservation_time && reservation_time !== "") {
@@ -103,6 +134,52 @@ function timeIsValid(req, res, next) {
       status: 400,
       message: "Requested reservation_time must be a time.",
     });
+  }
+}
+
+function notBeforeOpen(req, res, next) {
+  const reservation_time = req.body.data.reservation_time;
+
+  const splitTime = reservation_time.split(":");
+  if (Number(splitTime[0]) <= 10) {
+    if (Number(splitTime[0]) === 10) {
+      if (Number(splitTime[1]) < 30) {
+        next({
+          status: 400,
+          message: "Closed before 10:30",
+        });
+      }
+    } else {
+      next({
+        status: 400,
+        message: "Closed before 10:30",
+      });
+    }
+  } else {
+    next();
+  }
+}
+
+function notBeforeClose(req, res, next) {
+  const reservation_time = req.body.data.reservation_time;
+
+  const splitTime = reservation_time.split(":");
+  if (Number(splitTime[0]) >= 21) {
+    if (Number(splitTime[0]) === 21) {
+      if (Number(splitTime[1]) > 30) {
+        next({
+          status: 400,
+          message: "Too close to closing time.",
+        });
+      }
+    } else {
+      next({
+        status: 400,
+        message: "Too close to closing time.",
+      });
+    }
+  } else {
+    next();
   }
 }
 
@@ -157,8 +234,12 @@ module.exports = {
     hasMobilePhone,
     hasDate,
     dateIsValid,
+    notTuesday,
+    futureDate,
     hasTime,
     timeIsValid,
+    notBeforeOpen,
+    notBeforeClose,
     hasPeople,
     peopleIsNumber,
     asyncErrorBoundary(create),

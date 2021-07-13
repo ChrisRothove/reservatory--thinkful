@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { today } from "../utils/date-time";
 import { addReservation } from "../utils/api";
+import { getErrorComponent, getErrors } from "../utils/newReservationErrors";
 
-export default function NewReservation({ reservation }) {
+export default function NewReservation({ reservation, setDate }) {
   const history = useHistory();
 
   const date = today();
@@ -19,22 +20,45 @@ export default function NewReservation({ reservation }) {
       };
 
   const [formData, setFormData] = useState({ ...defaultFormData });
+  const [errors, setErrors] = useState([]);
 
   function onChangeHandler(e) {
     e.preventDefault();
     const event = e.target;
-    setFormData({ ...formData, [event.name]: event.value });
+    if (event.name === "people") {
+      const people = Number(event.value);
+      setFormData({ ...formData, people });
+    } else {
+      setFormData({ ...formData, [event.name]: event.value });
+    }
   }
 
   async function submitHandler(e) {
     e.preventDefault();
-    const response = await addReservation(formData);
-    console.log(response);
-    history.push(`/reservations?date=${formData.reservation_date}`);
+    const newErrors = getErrors(
+      formData.reservation_date,
+      formData.reservation_time
+    );
+    console.log(formData);
+    if (newErrors !== []) {
+      setErrors(newErrors);
+    } else {
+      const response = await addReservation(formData);
+      console.log(response.error);
+      setDate(formData.reservation_date);
+      history.push(`/reservations?date=${formData.reservation_date}`);
+    }
+  }
+
+  function handleCancel(e) {
+    e.preventDefault();
+    setFormData({ ...defaultFormData });
+    history.goBack();
   }
 
   return (
     <form className="resList form" onSubmit={submitHandler}>
+      {getErrorComponent(errors)}
       <h3>New Reservation</h3>
       <label>
         First Name:
@@ -108,9 +132,9 @@ export default function NewReservation({ reservation }) {
         <button className="btn btn-success" type="submit">
           Submit
         </button>
-        <Link className="btn btn-danger" to="/reservations/">
+        <button className="btn btn-danger" onClick={handleCancel}>
           Cancel
-        </Link>
+        </button>
       </div>
     </form>
   );
