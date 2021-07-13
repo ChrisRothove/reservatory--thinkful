@@ -42,6 +42,10 @@ body {
   justify-content: space-between;
 }
 
+.resList .insight {
+  font-size: 6pt;
+}
+
 .resList label {
   margin: 18px;
 }
