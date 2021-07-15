@@ -1,10 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function ReservationsList({ reservations }) {
   if (reservations) {
     let offset = false;
     const reservationsMap = reservations.map((reservation) => {
       const {
+        reservation_id,
         first_name,
         last_name,
         mobile_number,
@@ -38,6 +40,14 @@ export default function ReservationsList({ reservations }) {
             <div>
               <strong>Time:</strong> {reservation_time}
             </div>
+          </div>
+          <div className="buttons">
+            <Link
+              className="btn btn-primary"
+              to={`/reservations/${reservation_id}/seat`}
+            >
+              Seat
+            </Link>
           </div>
         </div>
       );

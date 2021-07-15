@@ -3,6 +3,7 @@ import { listReservations } from "../utils/api";
 import ReservationsList from "../components/ReservationsList";
 import ErrorAlert from "../layout/ErrorAlert";
 import DatePicker from "../components/DatePicker";
+import TableList from "../components/TableList";
 
 /**
  * Defines the dashboard page.
@@ -13,6 +14,23 @@ import DatePicker from "../components/DatePicker";
 function Dashboard({ date, setDate }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [tables, setTables] = useState([
+    {
+      table_name: "one",
+      table_capacity: 4,
+      occupied: false,
+    },
+    {
+      table_name: "two",
+      table_capacity: 5,
+      occupied: true,
+    },
+    {
+      table_name: "three",
+      table_capacity: 6,
+      occupied: false,
+    },
+  ]);
 
   useEffect(loadDashboard, [date]);
 
@@ -33,7 +51,16 @@ function Dashboard({ date, setDate }) {
       </div>
       <DatePicker date={date} setDate={setDate} />
       <ErrorAlert error={reservationsError} />
-      <ReservationsList reservations={reservations} />
+      <div className="container-fluid">
+        <div className="row h-100">
+          <div className="col overflow-auto">
+            <ReservationsList reservations={reservations} />
+          </div>
+          <div className="col-3 overflow-auto">
+            <TableList tables={tables} setTables={setTables} />
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

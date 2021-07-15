@@ -1,18 +1,11 @@
 import { next, previous } from "../utils/date-time";
 
-export default function DatePicker({ inquiryDate, setInquiryDate }) {
+export default function DatePicker({ date, setDate }) {
   return (
     <div id="date-picker">
-      <button onClick={() => setInquiryDate(previous(inquiryDate))}>
-        {`<< Last`}
-      </button>
-      <input
-        type="date"
-        onChange={(e) => setInquiryDate(e.target.value)}
-      ></input>
-      <button onClick={() => setInquiryDate(next(inquiryDate))}>
-        {`Next >>`}
-      </button>
+      <button onClick={() => setDate(previous(date))}>{`<< Last`}</button>
+      <input type="date" onChange={(e) => setDate(e.target.value)}></input>
+      <button onClick={() => setDate(next(date))}>{`Next >>`}</button>
     </div>
   );
 }
