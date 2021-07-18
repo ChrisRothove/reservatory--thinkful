@@ -11,26 +11,9 @@ import TableList from "../components/TableList";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date, setDate }) {
+function Dashboard({ date, setDate, tables, setTables }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [tables, setTables] = useState([
-    {
-      table_name: "one",
-      table_capacity: 4,
-      occupied: false,
-    },
-    {
-      table_name: "two",
-      table_capacity: 5,
-      occupied: true,
-    },
-    {
-      table_name: "three",
-      table_capacity: 6,
-      occupied: false,
-    },
-  ]);
 
   useEffect(loadDashboard, [date]);
 
