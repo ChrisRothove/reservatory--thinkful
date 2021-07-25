@@ -6,6 +6,7 @@ import NewReservation from "../components/NewReservation";
 import { today } from "../utils/date-time";
 import NewTable from "../components/NewTable";
 import SeatATable from "../components/SeatATable";
+import { listReservations, listTables } from "../utils/api";
 
 /**
  * Defines all the routes for the application.
@@ -15,27 +16,30 @@ import SeatATable from "../components/SeatATable";
  * @returns {JSX.Element}
  */
 function Routes() {
+  /**~~~~~~~~~~~~~~~~SET STATES~~~~~~~~~~~~~~~*/
   const [dashboardDate, setDashboardDate] = useState(today());
-  const [tables, setTables] = useState([
-    {
-      table_id: 1,
-      table_name: "one",
-      table_capacity: 4,
-      occupied: false,
-    },
-    {
-      table_id: 2,
-      table_name: "two",
-      table_capacity: 5,
-      occupied: true,
-    },
-    {
-      table_id: 3,
-      table_name: "three",
-      table_capacity: 6,
-      occupied: false,
-    },
-  ]);
+
+  const [reservations, setReservations] = useState([]);
+
+  const [tables, setTables] = useState([]);
+
+  const [reservationsError, setReservationsError] = useState(null);
+  const [tablesError, setTablesError] = useState(null);
+
+  useEffect(loadDashboard, [dashboardDate]);
+
+  function loadDashboard() {
+    const abortController = new AbortController();
+    setReservationsError(null);
+    listReservations({ date: dashboardDate }, abortController.signal)
+      .then(setReservations)
+      .catch(setReservationsError);
+    setTablesError(null);
+    listTables({}, abortController.signal)
+      .then(setTables)
+      .catch(setTablesError);
+    return () => abortController.abort();
+  }
 
   return (
     <Switch>
@@ -55,14 +59,20 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
-        <SeatATable tables={tables} setTables={setTables} />
+        <SeatATable
+          tables={tables}
+          reservations={reservations}
+          dashboardDate={dashboardDate}
+        />
       </Route>
       <Route path="/dashboard">
         <Dashboard
           date={dashboardDate}
           setDate={setDashboardDate}
           tables={tables}
-          setTables={setTables}
+          reservations={reservations}
+          reservationsError={reservationsError}
+          tablesError={tablesError}
         />
       </Route>
       <Route>

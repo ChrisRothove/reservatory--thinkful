@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { today } from "../utils/date-time";
 import { addReservation } from "../utils/api";
 import { getErrorComponent, getErrors } from "../utils/newReservationErrors";
@@ -39,8 +39,7 @@ export default function NewReservation({ reservation, setDate }) {
       formData.reservation_date,
       formData.reservation_time
     );
-    console.log(formData);
-    if (newErrors !== []) {
+    if (newErrors.length) {
       setErrors(newErrors);
     } else {
       const response = await addReservation(formData);

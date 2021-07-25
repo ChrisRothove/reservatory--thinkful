@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import ReservationsList from "../components/ReservationsList";
 import ErrorAlert from "../layout/ErrorAlert";
 import DatePicker from "../components/DatePicker";
@@ -11,21 +11,14 @@ import TableList from "../components/TableList";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date, setDate, tables, setTables }) {
-  const [reservations, setReservations] = useState([]);
-  const [reservationsError, setReservationsError] = useState(null);
-
-  useEffect(loadDashboard, [date]);
-
-  function loadDashboard() {
-    const abortController = new AbortController();
-    setReservationsError(null);
-    listReservations({ date: date }, abortController.signal)
-      .then(setReservations)
-      .catch(setReservationsError);
-    return () => abortController.abort();
-  }
-
+function Dashboard({
+  date,
+  setDate,
+  tables,
+  reservations,
+  reservationsError,
+  tablesError,
+}) {
   return (
     <main>
       <h1>Dashboard</h1>
@@ -34,13 +27,14 @@ function Dashboard({ date, setDate, tables, setTables }) {
       </div>
       <DatePicker date={date} setDate={setDate} />
       <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={tablesError} />
       <div className="container-fluid">
         <div className="row h-100">
           <div className="col overflow-auto">
             <ReservationsList reservations={reservations} />
           </div>
-          <div className="col-3 overflow-auto">
-            <TableList tables={tables} setTables={setTables} />
+          <div className="col-4 overflow-auto">
+            <TableList tables={tables} />
           </div>
         </div>
       </div>
