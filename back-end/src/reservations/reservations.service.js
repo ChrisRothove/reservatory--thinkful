@@ -4,6 +4,13 @@ function list() {
   return knex("reservations").select("*");
 }
 
+function read(reservation_id) {
+  return knex("reservations")
+    .select("*")
+    .where("reservation_id", reservation_id)
+    .then((created) => created[0]);
+}
+
 function listByDate(date) {
   return knex("reservations")
     .select("*")
@@ -28,4 +35,5 @@ module.exports = {
   list,
   listByDate,
   create,
+  read,
 };

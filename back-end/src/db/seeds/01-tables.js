@@ -7,19 +7,19 @@ exports.seed = function (knex) {
       return knex("tables").insert([
         {
           table_name: "Bar #1",
-          table_capacity: 1,
+          capacity: 1,
         },
         {
           table_name: "Bar #2",
-          table_capacity: 1,
+          capacity: 1,
         },
         {
           table_name: "#1",
-          table_capacity: 1,
+          capacity: 1,
         },
         {
           table_name: "#2",
-          table_capacity: 1,
+          capacity: 1,
         },
       ]);
     });

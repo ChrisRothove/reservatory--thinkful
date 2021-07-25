@@ -91,8 +91,6 @@ function notTuesday(req, res, next) {
 function futureDate(req, res, next) {
   const reservation_date = req.body.data.reservation_date;
   const inputDate = new Date(reservation_date);
-  // const splitTime = reservation_time.split(":");
-  // inputDate.setHours(splitTime[0], splitTime[1]);
   const todayDate = new Date(today());
 
   if (inputDate < todayDate) {
@@ -224,8 +222,15 @@ async function create(req, res) {
   res.status(201).json({ data: await service.create(req.body.data) });
 }
 
+async function read(req, res) {
+  res.json({
+    data: await service.read(req.params.reservation_id),
+  });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
+  read: asyncErrorBoundary(read),
   listByDate: asyncErrorBoundary(listByDate),
   create: [
     hasData,
