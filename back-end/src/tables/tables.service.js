@@ -11,9 +11,9 @@ function read(table_id) {
     .then((created) => created[0]);
 }
 
-function update(data) {
+function update(table_id) {
   return knex("tables")
-    .where("table_id", data.table_id)
+    .where("table_id", table_id)
     .update({ occupied: true }, [
       "table_id",
       "table_name",

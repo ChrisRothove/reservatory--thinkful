@@ -138,7 +138,7 @@ function capacityMatch(req, res, next) {
   } else {
     next({
       status: 400,
-      message: "table Capacity is too low",
+      message: "table capacity is too low",
     });
   }
 }
@@ -164,9 +164,9 @@ function read(req, res) {
 }
 
 async function updateOccupied(req, res) {
-  const data = req.body.data;
-  const updatedTable = await service.update(data);
-  res.status(201).json({ data: updatedTable });
+  const tableId = req.params.table_id;
+  const updatedTable = await service.update(tableId);
+  res.status(200).json({ data: updatedTable });
 }
 
 async function create(req, res) {
