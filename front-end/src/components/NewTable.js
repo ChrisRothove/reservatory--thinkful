@@ -7,7 +7,7 @@ export default function NewTable() {
   const history = useHistory();
   const defaultFormData = {
     table_name: "",
-    table_capacity: 1,
+    capacity: 0,
   };
 
   const [formData, setFormData] = useState({ ...defaultFormData });
@@ -17,7 +17,7 @@ export default function NewTable() {
     e.preventDefault();
     const event = e.target;
     let value = event.value;
-    if (event.name === "table_capacity") {
+    if (event.name === "capacity") {
       value = Number(event.value);
       console.log(typeof value);
     }
@@ -34,8 +34,8 @@ export default function NewTable() {
     const abortController = new AbortController();
     setTableError(null);
     addTable(formData, abortController.signal)
-      .then(console.log)
-      .catch(setTableError);
+      .catch(setTableError)
+      .then(history.push("/"));
     return () => abortController.abort();
   }
 
@@ -65,9 +65,9 @@ export default function NewTable() {
           Capacity:
           <input
             type="number"
-            id="tableCapacity"
-            name="table_capacity"
-            value={formData.table_capacity}
+            id="capacity"
+            name="capacity"
+            value={formData.capacity}
             min="1"
             required
             onChange={handleChange}

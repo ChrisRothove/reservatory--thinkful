@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { listReservations, listTables } from "../utils/api";
+import React, { useEffect } from "react";
 import ReservationsList from "../components/ReservationsList";
 import ErrorAlert from "../layout/ErrorAlert";
 import DatePicker from "../components/DatePicker";
 import TableList from "../components/TableList";
+import useQuery from "../utils/useQuery";
+
+import loadDashboard from "../utils/loadDashboard";
 
 /**
  * Defines the dashboard page.
@@ -18,7 +20,23 @@ function Dashboard({
   reservations,
   reservationsError,
   tablesError,
+  setReservations,
+  setReservationsError,
+  setTables,
+  setTablesError,
 }) {
+  useEffect(
+    () =>
+      loadDashboard(
+        setReservations,
+        setReservationsError,
+        setTablesError,
+        setTables,
+        date
+      ),
+    [date]
+  );
+
   return (
     <main>
       <h1>Dashboard</h1>

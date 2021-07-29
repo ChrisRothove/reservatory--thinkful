@@ -90,9 +90,9 @@ export async function addTable(newTable, signal) {
   return await fetchJson(url, { body, method, headers, signal }, []);
 }
 
-export async function seatTable(details, signal) {
-  const url = new URL(`${API_BASE_URL}/tables/${details.table_id}/seat`);
+export async function seatTable(res_id, table_id, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
   const method = "PUT";
-  const body = JSON.stringify({ data: details });
+  const body = JSON.stringify({ data: { reservation_id: res_id } });
   return await fetchJson(url, { body, method, headers, signal }, []);
 }

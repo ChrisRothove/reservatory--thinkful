@@ -21,6 +21,7 @@ function listByDate(date) {
 function create(newReservation) {
   return knex("reservations")
     .insert(newReservation, [
+      "reservation_id",
       "first_name",
       "last_name",
       "mobile_number",

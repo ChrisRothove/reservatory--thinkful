@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
@@ -6,7 +6,7 @@ import NewReservation from "../components/NewReservation";
 import { today } from "../utils/date-time";
 import NewTable from "../components/NewTable";
 import SeatATable from "../components/SeatATable";
-import { listReservations, listTables } from "../utils/api";
+import useQuery from "../utils/useQuery";
 
 /**
  * Defines all the routes for the application.
@@ -17,7 +17,9 @@ import { listReservations, listTables } from "../utils/api";
  */
 function Routes() {
   /**~~~~~~~~~~~~~~~~SET STATES~~~~~~~~~~~~~~~*/
-  const [dashboardDate, setDashboardDate] = useState(today());
+  const [dashboardDate, setDashboardDate] = useState(
+    useQuery().get("date") || today()
+  );
 
   const [reservations, setReservations] = useState([]);
 
@@ -26,20 +28,7 @@ function Routes() {
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
 
-  useEffect(loadDashboard, [dashboardDate]);
-
-  function loadDashboard() {
-    const abortController = new AbortController();
-    setReservationsError(null);
-    listReservations({ date: dashboardDate }, abortController.signal)
-      .then(setReservations)
-      .catch(setReservationsError);
-    setTablesError(null);
-    listTables({}, abortController.signal)
-      .then(setTables)
-      .catch(setTablesError);
-    return () => abortController.abort();
-  }
+  const queryDate = useQuery().get("date");
 
   return (
     <Switch>
@@ -61,8 +50,12 @@ function Routes() {
       <Route path="/reservations/:reservation_id/seat">
         <SeatATable
           tables={tables}
-          reservations={reservations}
           dashboardDate={dashboardDate}
+          tablesError={tablesError}
+          setTables={setTables}
+          setTablesError={setTablesError}
+          setReservations={setReservations}
+          setReservationsError={setReservationsError}
         />
       </Route>
       <Route path="/dashboard">
@@ -73,6 +66,10 @@ function Routes() {
           reservations={reservations}
           reservationsError={reservationsError}
           tablesError={tablesError}
+          setReservations={setReservations}
+          setReservationsError={setReservationsError}
+          setTables={setTables}
+          setTablesError={setTablesError}
         />
       </Route>
       <Route>

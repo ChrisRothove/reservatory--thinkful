@@ -24,7 +24,7 @@ function update(table_id) {
 
 function create(data) {
   return knex("tables")
-    .insert(data, ["table_name", "capacity"])
+    .insert(data, ["table_id", "table_name", "capacity"])
     .then((created) => created[0]);
 }
 

@@ -133,7 +133,8 @@ async function resIsValid(req, res, next) {
 function capacityMatch(req, res, next) {
   const tableCapacity = res.locals.foundTable.capacity;
   const people = res.locals.foundRes.people;
-  if (people <= tableCapacity) {
+  console.log("tableCap: ", tableCapacity, " people: ", people);
+  if (people < tableCapacity) {
     next();
   } else {
     next({

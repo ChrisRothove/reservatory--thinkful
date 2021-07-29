@@ -1,25 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import ErrorAlert from "../layout/ErrorAlert";
 import { seatTable } from "../utils/api";
+import loadDashboard from "../utils/loadDashboard";
 
-export default function SeatATable({ tables, reservations, dashboardDate }) {
+export default function SeatATable({
+  tables,
+  dashboardDate,
+  tablesError,
+  setTables,
+  setTablesError,
+  setReservations,
+  setReservationsError,
+}) {
   const history = useHistory();
+  const { reservation_id } = useParams();
 
   const [selected, setSelected] = useState(0);
-  const [seatingError, setSeatingError] = useState(null);
 
-  const { reservation_id } = useParams();
-  console.log("date:", dashboardDate, "reservations:", reservations);
-  const reservation = reservations.find(
-    (reservation) => Number(reservation_id) === reservation.reservation_id
-  ); // find info for current reservation
+  useEffect(
+    () =>
+      loadDashboard(
+        setReservations,
+        setReservationsError,
+        setTablesError,
+        setTables,
+        dashboardDate
+      ),
+    [dashboardDate]
+  );
 
   const options = tables.map((table) => {
-    const { table_id, table_name } = table;
+    const { table_id, table_name, capacity } = table;
     return (
       <option key={table_id} value={table_id}>
-        {table_name}
+        {table_name} - {capacity}
       </option>
     );
   }); // create table options
@@ -27,47 +42,44 @@ export default function SeatATable({ tables, reservations, dashboardDate }) {
   function changeHandler(e) {
     e.preventDefault();
     const event = e.target;
-    console.log(event.value);
     setSelected(event.value);
   }
 
-  function seatTheTable(details) {
+  function seatTheTable() {
     const abortController = new AbortController();
-    setSeatingError(null);
-    seatTable(details, abortController.signal)
-      .then(console.log)
-      .catch(setSeatingError);
+    setTablesError(null);
+    seatTable(reservation_id, selected, abortController.signal)
+      .then((response) => {
+        if (!response.message) {
+          history.push("/");
+        }
+      })
+      .catch(setTablesError);
     return () => abortController.abort();
   }
 
   function submitHandler(e) {
     e.preventDefault();
-    const foundTable = tables.find((table) => {
-      return Number(selected) === table.table_id;
-    });
-    console.log(tables);
-    const details = {
-      table_id: foundTable.table_id,
-      table_capacity: foundTable.table_capacity,
-      reservation_id: reservation.reservation_id,
-      people: reservation.people,
-    };
-    seatTheTable(details);
+    if (selected === 0) {
+      setTablesError({ message: "Please select a table." });
+    } else {
+      seatTheTable();
+    }
   }
 
   function backHandler(e) {
     e.preventDefault();
-    history.goBack();
+    history.push("/");
   }
   return (
     <div>
-      <ErrorAlert error={seatingError} />
+      <ErrorAlert error={tablesError} />
       <form className="resList form" onSubmit={submitHandler}>
-        <label for="selectTable">
+        <label>
           Seat Table for reservation {reservation_id}
           <br />
-          <select name="table_id" id="selectTable" onChange={changeHandler}>
-            <option value="0" selected>
+          <select name="table_id" id="table_id" onChange={changeHandler}>
+            <option value="" selected>
               --
             </option>
             {options}

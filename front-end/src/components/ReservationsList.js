@@ -42,12 +42,12 @@ export default function ReservationsList({ reservations }) {
             </div>
           </div>
           <div className="buttons">
-            <Link
+            <a
               className="btn btn-primary"
-              to={`/reservations/${reservation_id}/seat`}
+              href={`/reservations/${reservation.reservation_id}/seat`}
             >
               Seat
-            </Link>
+            </a>
           </div>
         </div>
       );
