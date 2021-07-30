@@ -6,19 +6,30 @@ function list() {
 
 function read(table_id) {
   return knex("tables")
-    .where("table_id", table_id)
     .select("*")
+    .where({ table_id: table_id })
     .then((created) => created[0]);
 }
 
-function update(table_id) {
+function update(table_id, reservation_id) {
   return knex("tables")
     .where("table_id", table_id)
-    .update({ occupied: true }, [
+    .update({ reservation_id: reservation_id }, [
       "table_id",
       "table_name",
       "capacity",
-      "occupied",
+      "reservation_id",
+    ]);
+}
+
+function updateFinish(table_id) {
+  return knex("tables")
+    .where("table_id", table_id)
+    .update({ reservation_id: null }, [
+      "table_id",
+      "table_name",
+      "capacity",
+      "reservation_id",
     ]);
 }
 
@@ -33,4 +44,5 @@ module.exports = {
   read,
   update,
   create,
+  updateFinish,
 };

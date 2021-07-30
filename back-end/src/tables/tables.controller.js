@@ -110,8 +110,8 @@ async function tableIdValid(req, res, next) {
     next();
   } else {
     next({
-      status: 400,
-      message: "table Id must be valid.",
+      status: 404,
+      message: `${req.params.table_id} is not a valid table_id`,
     });
   }
 }
@@ -133,8 +133,7 @@ async function resIsValid(req, res, next) {
 function capacityMatch(req, res, next) {
   const tableCapacity = res.locals.foundTable.capacity;
   const people = res.locals.foundRes.people;
-  console.log("tableCap: ", tableCapacity, " people: ", people);
-  if (people < tableCapacity) {
+  if (people <= tableCapacity) {
     next();
   } else {
     next({
@@ -145,10 +144,21 @@ function capacityMatch(req, res, next) {
 }
 
 function tableIsFree(req, res, next) {
-  if (res.locals.foundTable.occupied) {
+  if (res.locals.foundTable.reservation_id) {
     next({
       status: 400,
       message: "table is occupied.",
+    });
+  } else {
+    next();
+  }
+}
+
+function tableIsOccupied(req, res, next) {
+  if (!res.locals.foundTable.reservation_id) {
+    next({
+      status: 400,
+      message: "table is not occupied.",
     });
   } else {
     next();
@@ -166,7 +176,14 @@ function read(req, res) {
 
 async function updateOccupied(req, res) {
   const tableId = req.params.table_id;
-  const updatedTable = await service.update(tableId);
+  const resId = req.body.data.reservation_id;
+  const updatedTable = await service.update(tableId, resId);
+  res.status(200).json({ data: updatedTable });
+}
+
+async function updateFinish(req, res) {
+  const tableId = req.params.table_id;
+  const updatedTable = await service.updateFinish(tableId);
   res.status(200).json({ data: updatedTable });
 }
 
@@ -187,6 +204,11 @@ module.exports = {
     tableIsFree,
     capacityMatch,
     asyncErrorBoundary(updateOccupied),
+  ],
+  updateFinish: [
+    asyncErrorBoundary(tableIdValid),
+    tableIsOccupied,
+    asyncErrorBoundary(updateFinish),
   ],
   create: [
     hasData,
