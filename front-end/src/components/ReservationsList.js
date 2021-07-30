@@ -14,10 +14,7 @@ export default function ReservationsList({ reservations }) {
         reservation_time,
       } = reservation;
       const offsetClass = offset ? "resList offset" : "resList";
-      console.log(
-        "🚀 ~ file: ReservationsList.js ~ line 16 ~ reservationsMap ~ offsetClass",
-        offsetClass
-      );
+
       offset = !offset;
       return (
         <div className={offsetClass}>
