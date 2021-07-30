@@ -1,10 +1,12 @@
-export default function unSeat(table_id) {
+import { unseatTable } from "./api";
+
+export default async function unSeat(table_id) {
   if (
     window.confirm(
       "Is this table ready to seat new guests? This cannot be undone."
     )
   ) {
-    console.log("thumbs up");
+    return await unseatTable(table_id);
   } else {
     console.log("canceled. No changes made.");
   }

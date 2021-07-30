@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { setDefaultOptions } = require('expect-puppeteer');
+const { setDefaultOptions } = require("expect-puppeteer");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -35,7 +35,7 @@ describe("US-05 - Finish an occupied table - E2E", () => {
       reservation = await createReservation({
         first_name: "Finish",
         last_name: Date.now().toString(10),
-        mobile_number: "555-1313",
+        mobile_number: "816-555-1313",
         reservation_date: "2035-01-01",
         reservation_time: "13:45",
         people: 4,

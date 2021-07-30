@@ -1,22 +1,27 @@
+import { useHistory } from "react-router";
 import unSeat from "../utils/unSeat";
 
 export default function TableList({ tables }) {
+  const history = useHistory();
   if (tables) {
     const tableList = tables.map((table) => {
-      const { table_id, table_name, capacity, occupied } = table;
+      const { table_id, table_name, capacity, reservation_id } = table;
 
-      const isOccupied = occupied ? "Occupied" : "Free";
+      const isOccupied = reservation_id ? "Occupied" : "Free";
 
-      const finishButton = occupied ? ( //create button if occupied is true
+      const finishButton = reservation_id ? ( //create button if occupied is true
         <button
-          data-table-id-finish={table.table_id}
+          data-table-id-finish={table_id}
           className="btn btn-danger"
-          onClick={() => unSeat(table_id)}
+          onClick={async function () {
+            await unSeat(table_id, reservation_id);
+            history.push("/");
+          }}
         >
           finish
         </button>
       ) : (
-        //create empty div is occupied is false
+        //create empty div if occupied is false
         <div></div>
       );
 
