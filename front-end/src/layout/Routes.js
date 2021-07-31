@@ -28,7 +28,7 @@ function Routes() {
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
 
-  const queryDate = useQuery().get("date");
+  // const queryDate = useQuery().get("date");
 
   return (
     <Switch>

@@ -39,11 +39,13 @@ function Dashboard({
 
   return (
     <main>
-      <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for {date}</h4>
+      <div className="headerBar">
+        <h1>Dashboard</h1>
+        <div className="d-md-flex mb-3">
+          <h4 className="mb-0">Reservations for {date}</h4>
+        </div>
+        <DatePicker date={date} setDate={setDate} />
       </div>
-      <DatePicker date={date} setDate={setDate} />
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
       <div className="container-fluid">
