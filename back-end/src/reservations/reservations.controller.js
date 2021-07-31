@@ -263,10 +263,18 @@ async function list(req, res) {
   });
 }
 
-async function listByDate(req, res) {
-  res.json({
-    data: await service.listByDate(req.query.date),
-  });
+async function listByQuery(req, res) {
+  const date = req.query.date;
+  const mobile_number = req.query.mobile_number;
+  if (date) {
+    res.json({
+      data: await service.listByDate(req.query.date),
+    });
+  } else if (mobile_number) {
+    res.json({
+      data: await service.listByPhone(req.query.mobile_number),
+    });
+  }
 }
 
 async function create(req, res) {
@@ -290,7 +298,7 @@ async function updateStatus(req, res) {
 module.exports = {
   list: asyncErrorBoundary(list),
   read: asyncErrorBoundary(read),
-  listByDate: asyncErrorBoundary(listByDate),
+  listByQuery: asyncErrorBoundary(listByQuery),
   create: [
     hasData,
     hasFirstName,

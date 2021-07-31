@@ -22,7 +22,7 @@ function listByDate(date) {
 function listByPhone(phone) {
   return knex("reservations")
     .select("*")
-    .where({ mobile_number: phone })
+    .where("mobile_number", "like", `%${phone}%`)
     .orderBy("reservation_time");
 }
 
