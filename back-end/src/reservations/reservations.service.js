@@ -19,6 +19,13 @@ function listByDate(date) {
     .orderBy("reservation_time");
 }
 
+function listByPhone(phone) {
+  return knex("reservations")
+    .select("*")
+    .where({ mobile_number: phone })
+    .orderBy("reservation_time");
+}
+
 function create(newReservation) {
   return knex("reservations")
     .insert(newReservation, [
@@ -53,6 +60,7 @@ function updateStatus(res_id, status) {
 module.exports = {
   list,
   listByDate,
+  listByPhone,
   create,
   read,
   updateStatus,
