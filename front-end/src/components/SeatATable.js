@@ -27,6 +27,7 @@ export default function SeatATable({
         setTables,
         dashboardDate
       ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dashboardDate]
   );
 
