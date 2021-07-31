@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function ReservationsList({ reservations }) {
-  if (reservations) {
+  if (reservations && reservations.length) {
     const reservationsMap = reservations.map((reservation) => {
       const {
         reservation_id,
@@ -64,8 +64,8 @@ export default function ReservationsList({ reservations }) {
     return <div>{reservationsMap}</div>;
   } else {
     return (
-      <div classList="resList">
-        <h2>There are no Reservations for this date.</h2>
+      <div className="resList">
+        <h2>No reservations found</h2>
       </div>
     );
   }
