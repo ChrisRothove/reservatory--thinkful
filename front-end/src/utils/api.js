@@ -97,9 +97,9 @@ export async function seatTable(res_id, table_id, signal) {
   return await fetchJson(url, { body, method, headers, signal }, []);
 }
 
-export async function unseatTable(table_id, signal) {
+export async function unseatTable(table_id, reservation_id, signal) {
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
   const method = "DELETE";
-  const body = JSON.stringify({ data: null });
+  const body = JSON.stringify({ data: { reservation_id } });
   return await fetchJson(url, { body, method, headers, signal }, []);
 }

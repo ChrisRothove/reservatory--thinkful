@@ -208,7 +208,7 @@ function peopleIsNumber(req, res, next) {
 /**~~~~~~~~~~~~~~~~STATUS MIDDLEWARE~~~~~~~~~~~~~~~*/
 function booked(req, res, next) {
   const status = req.body.data.status;
-  if (status === "booked") {
+  if (status === "booked" || !status) {
     next();
   } else {
     next({

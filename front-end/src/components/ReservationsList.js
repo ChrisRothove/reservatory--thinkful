@@ -1,9 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 export default function ReservationsList({ reservations }) {
   if (reservations) {
-    let offset = false;
     const reservationsMap = reservations.map((reservation) => {
       const {
         reservation_id,
@@ -12,32 +10,11 @@ export default function ReservationsList({ reservations }) {
         mobile_number,
         reservation_date,
         reservation_time,
+        status,
       } = reservation;
-      const offsetClass = offset ? "resList offset" : "resList";
 
-      offset = !offset;
-      return (
-        <div className={offsetClass}>
-          <div className="name">
-            <div>
-              <strong>{first_name}</strong>
-            </div>
-            <div>
-              <strong>{last_name}</strong>
-            </div>
-          </div>
-
-          <div className="deets">
-            <div>
-              <strong>Phone:</strong> {mobile_number}
-            </div>
-            <div>
-              <strong>Date:</strong> {reservation_date}
-            </div>
-            <div>
-              <strong>Time:</strong> {reservation_time}
-            </div>
-          </div>
+      const seatButton =
+        status === "booked" ? (
           <div className="buttons">
             <a
               className="btn btn-primary"
@@ -45,6 +22,40 @@ export default function ReservationsList({ reservations }) {
             >
               Seat
             </a>
+          </div>
+        ) : (
+          <div></div>
+        );
+
+      return (
+        <div key={reservation_id} className="resList">
+          <div className="card-body">
+            <div className="card-title name">
+              <div>
+                <strong>{first_name}</strong>
+              </div>
+              <div>
+                <strong>{last_name}</strong>
+              </div>
+            </div>
+            <div
+              className="card-subtitle mb-2 text-muted"
+              data-reservation-id-status={reservation_id}
+            >
+              {status}
+            </div>
+            <div className="card-text deets">
+              <div>
+                <strong>Phone:</strong> {mobile_number}
+              </div>
+              <div>
+                <strong>Date:</strong> {reservation_date}
+              </div>
+              <div>
+                <strong>Time:</strong> {reservation_time}
+              </div>
+            </div>
+            {seatButton}
           </div>
         </div>
       );
