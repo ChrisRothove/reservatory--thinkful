@@ -45,7 +45,13 @@ export default function NewTable() {
   }
 
   return (
-    <div>
+    <main>
+      <div className="headerBar">
+        <h1>New Table</h1>
+        <div className="d-md-flex mb-3">
+          <h4 className="mb-0">Create a new Table below</h4>
+        </div>
+      </div>
       <ErrorAlert error={tableError} />
       <form className="resList form" onSubmit={submitHandler}>
         <label>
@@ -82,6 +88,6 @@ export default function NewTable() {
           </button>
         </div>
       </form>
-    </div>
+    </main>
   );
 }

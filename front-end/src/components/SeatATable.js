@@ -72,7 +72,13 @@ export default function SeatATable({
     history.push("/");
   }
   return (
-    <div>
+    <main>
+      <div className="headerBar">
+        <h1>Reservation Seating</h1>
+        <div className="d-md-flex mb-3">
+          <h4 className="mb-0">Seat this Reservation below</h4>
+        </div>
+      </div>
       <ErrorAlert error={tablesError} />
       <form className="resList form" onSubmit={submitHandler}>
         <label>
@@ -94,6 +100,6 @@ export default function SeatATable({
           </button>
         </div>
       </form>
-    </div>
+    </main>
   );
 }
