@@ -205,6 +205,57 @@ function peopleIsNumber(req, res, next) {
   }
 }
 
+/**~~~~~~~~~~~~~~~~STATUS MIDDLEWARE~~~~~~~~~~~~~~~*/
+function booked(req, res, next) {
+  const status = req.body.data.status;
+  if (status === "booked") {
+    next();
+  } else {
+    next({
+      status: 400,
+      message: `initial status cannot be ${status}`,
+    });
+  }
+}
+
+async function finished(req, res, next) {
+  const currentRes = await service.read(req.params.reservation_id);
+  if (currentRes.status !== "finished") {
+    next();
+  } else {
+    next({
+      status: 400,
+      message: `cannot update a finished status`,
+    });
+  }
+}
+
+async function resIsValid(req, res, next) {
+  const resId = req.params.reservation_id;
+  const foundRes = await service.read(resId);
+  if (foundRes) {
+    res.locals.foundRes = { ...foundRes };
+    next();
+  } else {
+    next({
+      status: 404,
+      message: `${resId} is not a valid reservation_id`,
+    });
+  }
+}
+
+function validStatus(req, res, next) {
+  const status = req.body.data.status;
+  if (status === "booked" || status === "seated" || status === "finished") {
+    next();
+  } else {
+    next({
+      status: 400,
+      message: `${status} is not a valid status`,
+    });
+  }
+}
+
 /**~~~~~~~~~~~~~~~~END POINTS~~~~~~~~~~~~~~~*/
 async function list(req, res) {
   res.json({
@@ -228,6 +279,14 @@ async function read(req, res) {
   });
 }
 
+async function updateStatus(req, res) {
+  const status = req.body.data.status;
+  const res_id = req.params.reservation_id;
+  res.status(200).json({
+    data: await service.updateStatus(res_id, status),
+  });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   read: asyncErrorBoundary(read),
@@ -247,6 +306,14 @@ module.exports = {
     notBeforeClose,
     hasPeople,
     peopleIsNumber,
+    booked,
     asyncErrorBoundary(create),
+  ],
+  updateStatus: [
+    asyncErrorBoundary(resIsValid),
+    validStatus,
+    finished,
+    hasData,
+    asyncErrorBoundary(updateStatus),
   ],
 };
