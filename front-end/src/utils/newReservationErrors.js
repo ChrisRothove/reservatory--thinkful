@@ -1,7 +1,5 @@
 //creates error messages for NewReservation.js component
 
-import { today } from "./date-time";
-
 export function getErrors(date, time) {
   const inputDate = new Date(date.split("-"));
   const splitTime = time.split(":");

@@ -3,7 +3,6 @@ import ReservationsList from "../components/ReservationsList";
 import ErrorAlert from "../layout/ErrorAlert";
 import DatePicker from "../components/DatePicker";
 import TableList from "../components/TableList";
-import useQuery from "../utils/useQuery";
 
 import loadDashboard from "../utils/loadDashboard";
 
@@ -34,6 +33,7 @@ function Dashboard({
         setTables,
         date
       ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [date]
   );
 

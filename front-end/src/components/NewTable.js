@@ -19,7 +19,6 @@ export default function NewTable() {
     let value = event.value;
     if (event.name === "capacity") {
       value = Number(event.value);
-      console.log(typeof value);
     }
     setFormData({ ...formData, [event.name]: value });
   }
