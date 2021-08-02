@@ -14,7 +14,7 @@ function read(reservation_id) {
 function listByDate(date) {
   return knex("reservations")
     .select("*")
-    .whereNot({ status: "finished" })
+    .whereNot({ status: "finished", status: "cancelled" })
     .where("reservation_date", date)
     .orderBy("reservation_time");
 }
@@ -22,6 +22,7 @@ function listByDate(date) {
 function listByPhone(phone) {
   return knex("reservations")
     .select("*")
+    .whereNot({ status: "finished", status: "cancelled" })
     .where("mobile_number", "like", `%${phone}%`)
     .orderBy("reservation_time");
 }
