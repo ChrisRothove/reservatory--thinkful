@@ -220,12 +220,12 @@ function booked(req, res, next) {
 
 async function finished(req, res, next) {
   const currentRes = await service.read(req.params.reservation_id);
-  if (currentRes.status !== "finished") {
+  if (currentRes.status !== "finished" && currentRes.status !== "cancelled") {
     next();
   } else {
     next({
       status: 400,
-      message: `cannot update a finished status`,
+      message: `cannot update a finished or cancelled status`,
     });
   }
 }
@@ -246,7 +246,12 @@ async function resIsValid(req, res, next) {
 
 function validStatus(req, res, next) {
   const status = req.body.data.status;
-  if (status === "booked" || status === "seated" || status === "finished") {
+  if (
+    status === "booked" ||
+    status === "seated" ||
+    status === "finished" ||
+    status === "cancelled"
+  ) {
     next();
   } else {
     next({
@@ -295,6 +300,13 @@ async function updateStatus(req, res) {
   });
 }
 
+async function update(req, res) {
+  const newReservation = req.body.data;
+  res.status(200).json({
+    data: await service.update(newReservation),
+  });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   read: asyncErrorBoundary(read),
@@ -318,10 +330,29 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   updateStatus: [
+    hasData,
     asyncErrorBoundary(resIsValid),
     validStatus,
     finished,
-    hasData,
     asyncErrorBoundary(updateStatus),
+  ],
+  update: [
+    hasData,
+    asyncErrorBoundary(resIsValid),
+    hasFirstName,
+    hasLastName,
+    hasMobilePhone,
+    hasDate,
+    dateIsValid,
+    notTuesday,
+    futureDate,
+    hasTime,
+    timeIsValid,
+    notBeforeOpen,
+    notBeforeClose,
+    hasPeople,
+    peopleIsNumber,
+    booked,
+    asyncErrorBoundary(update),
   ],
 };
