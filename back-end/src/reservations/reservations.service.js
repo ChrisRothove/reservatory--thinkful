@@ -14,16 +14,18 @@ function read(reservation_id) {
 function listByDate(date) {
   return knex("reservations")
     .select("*")
-    .whereNot({ status: "finished", status: "cancelled" })
-    .where("reservation_date", date)
+    .whereNot({ status: "cancelled" })
+    .andWhereNot({ status: "finished" })
+    .andWhere("reservation_date", date)
     .orderBy("reservation_time");
 }
 
 function listByPhone(phone) {
   return knex("reservations")
     .select("*")
-    .whereNot({ status: "finished", status: "cancelled" })
-    .where("mobile_number", "like", `%${phone}%`)
+    .whereNot({ status: "cancelled" })
+    .andWhereNot({ status: "finished" })
+    .andWhere("mobile_number", "like", `%${phone}%`)
     .orderBy("reservation_time");
 }
 

@@ -309,7 +309,7 @@ async function update(req, res) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  read: asyncErrorBoundary(read),
+  read: [asyncErrorBoundary(resIsValid), asyncErrorBoundary(read)],
   listByQuery: asyncErrorBoundary(listByQuery),
   create: [
     hasData,

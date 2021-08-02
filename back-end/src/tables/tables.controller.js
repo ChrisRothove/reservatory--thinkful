@@ -198,7 +198,7 @@ async function updateOccupied(req, res) {
 
 async function updateFinish(req, res) {
   const tableId = req.params.table_id;
-  const resId = req.body.data.reservation_id;
+  const resId = res.locals.foundTable.reservation_id;
   const updatedRes = await reservationsService.updateStatus(resId, "finished");
   const updatedTable = await service.updateFinish(tableId);
   res.status(200).json({ data: updatedTable });

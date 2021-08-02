@@ -21,7 +21,7 @@ export default function EditReservation({ setDate }) {
     );
     return () => abort.abort();
   }, [reservation_id]);
-  console.log(formData);
+
   function onChangeHandler(e) {
     e.preventDefault();
     const event = e.target;
@@ -38,7 +38,6 @@ export default function EditReservation({ setDate }) {
 
   async function submitHandler(e) {
     e.preventDefault();
-    console.log(formData.reservation_time);
     const newErrors = getErrors(
       formData.reservation_date,
       formData.reservation_time

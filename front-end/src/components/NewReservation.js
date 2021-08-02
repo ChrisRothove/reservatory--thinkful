@@ -27,7 +27,6 @@ export default function NewReservation({ setDate }) {
       const people = Number(event.value);
       setFormData({ ...formData, people });
     } else {
-      console.log(event.value);
       setFormData({ ...formData, [event.name]: event.value });
     }
   }
