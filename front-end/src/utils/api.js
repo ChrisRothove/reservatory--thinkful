@@ -103,3 +103,25 @@ export async function unseatTable(table_id, reservation_id, signal) {
   const body = JSON.stringify({ data: { reservation_id } });
   return await fetchJson(url, { body, method, headers, signal }, []);
 }
+
+export async function cancelReservation(reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`);
+  const method = "PUT";
+  const body = JSON.stringify({ data: { status: "cancelled" } });
+  return await fetchJson(url, { body, method, headers, signal });
+}
+
+export async function updateReservation(newReservation, signal) {
+  const url = new URL(
+    `${API_BASE_URL}/reservations/${newReservation.reservation_id}`
+  );
+  const method = "PUT";
+  const body = JSON.stringify({ data: newReservation });
+  return await fetchJson(url, { body, method, headers, signal });
+}
+
+export async function getReservation(reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
+  const method = "GET";
+  return await fetchJson(url, { body: null, method, headers, signal });
+}

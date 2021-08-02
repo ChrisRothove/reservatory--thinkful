@@ -1,6 +1,9 @@
 import React from "react";
+import { useHistory } from "react-router";
+import deleteReservationAlert from "../utils/deleteReservationAlert";
 
 export default function ReservationsList({ reservations }) {
+  const history = useHistory();
   if (reservations && reservations.length) {
     const reservationsMap = reservations.map((reservation) => {
       const {
@@ -55,7 +58,25 @@ export default function ReservationsList({ reservations }) {
                 <strong>Time:</strong> {reservation_time}
               </div>
             </div>
-            {seatButton}
+            <div className="buttons">
+              {seatButton}
+              <a
+                href={`/reservations/${reservation.reservation_id}/edit`}
+                className="btn btn-primary"
+              >
+                Edit
+              </a>
+              <button
+                className="btn btn-danger"
+                data-reservation-id-cancel={reservation.reservation_id}
+                onClick={async function () {
+                  await deleteReservationAlert(reservation_id);
+                  history.push("/");
+                }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       );

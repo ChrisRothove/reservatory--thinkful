@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const { setDefaultOptions } = require('expect-puppeteer');
+const { setDefaultOptions } = require("expect-puppeteer");
 const fs = require("fs");
 const fsPromises = fs.promises;
 
@@ -29,7 +29,7 @@ describe("US-08 - Change an existing reservation - E2E", () => {
     reservation = await createReservation({
       first_name: "Change",
       last_name: Date.now().toString(10),
-      mobile_number: "555-1616",
+      mobile_number: "816-555-1616",
       reservation_date: "2035-01-04",
       reservation_time: "14:00",
       people: 4,
@@ -61,8 +61,7 @@ describe("US-08 - Change an existing reservation - E2E", () => {
         await page.waitForSelector(hrefSelector);
 
         await page.screenshot({
-          path:
-            ".screenshots/us-08-dashboard-edit-click-after-no-change-expected.png",
+          path: ".screenshots/us-08-dashboard-edit-click-after-no-change-expected.png",
           fullPage: true,
         });
 

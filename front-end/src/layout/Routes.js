@@ -8,6 +8,7 @@ import NewTable from "../components/NewTable";
 import SeatATable from "../components/SeatATable";
 import useQuery from "../utils/useQuery";
 import SearchReservations from "../components/SearchReservations";
+import EditReservation from "../components/EditReservation";
 
 /**
  * Defines all the routes for the application.
@@ -37,7 +38,7 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route exact={true} path="/reservations/new">
-        <NewReservation reservation={null} setDate={setDashboardDate} />
+        <NewReservation setDate={setDashboardDate} />
       </Route>
       <Route exact={true} path="/reservations">
         <Redirect to={"/dashboard"} />
@@ -66,6 +67,9 @@ function Routes() {
           setReservations={setReservations}
           setReservationsError={setReservationsError}
         />
+      </Route>
+      <Route path="/reservations/:reservation_id/edit" exact={true}>
+        <EditReservation setDate={setDashboardDate} />
       </Route>
       <Route path="/dashboard">
         <Dashboard

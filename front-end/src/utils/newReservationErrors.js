@@ -3,13 +3,11 @@
 import { today } from "./date-time";
 
 export function getErrors(date, time) {
-  const inputDate = new Date(date);
+  const inputDate = new Date(date.split("-"));
   const splitTime = time.split(":");
   inputDate.setHours(splitTime[0], splitTime[1]);
-  const todayDate = new Date(today());
+  const todayDate = new Date();
   const errors = [];
-
-  console.log("hours: ", inputDate.getHours());
 
   //Date is already past
   if (todayDate >= inputDate) {
@@ -17,7 +15,7 @@ export function getErrors(date, time) {
   }
 
   //day is a tuesday
-  if (inputDate.getDay() === 1) {
+  if (inputDate.getDay() === 2) {
     errors.push("Closed on Tuesdays.");
   }
 

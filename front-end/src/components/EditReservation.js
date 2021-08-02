@@ -1,39 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { today } from "../utils/date-time";
-import { addReservation, getReservation } from "../utils/api";
+import { formatAsDate } from "../utils/date-time";
+import { getReservation, updateReservation } from "../utils/api";
 import { getErrorComponent, getErrors } from "../utils/newReservationErrors";
 
-export default function NewReservation({ setDate }) {
+export default function EditReservation({ setDate }) {
   const history = useHistory();
-
-  const date = today();
-  const defaultFormData = {
-    first_name: "",
-    last_name: "",
-    mobile_number: "",
-    reservation_date: date,
-    reservation_time: "",
-    people: 1,
-  };
-
-  const [formData, setFormData] = useState({ ...defaultFormData });
+  const { reservation_id } = useParams();
+  const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState([]);
 
+  useEffect(() => {
+    const abort = new AbortController();
+    getReservation(reservation_id, abort.signal).then((reservation) =>
+      setFormData({
+        ...reservation,
+        reservation_date: formatAsDate(reservation.reservation_date),
+        reservation_time: reservation.reservation_time.substr(0, 5),
+      })
+    );
+    return () => abort.abort();
+  }, [reservation_id]);
+  console.log(formData);
   function onChangeHandler(e) {
     e.preventDefault();
     const event = e.target;
     if (event.name === "people") {
       const people = Number(event.value);
       setFormData({ ...formData, people });
+    } else if (event.name === "reservation_time") {
+      const reservation_time = event.value.substr(0, 5);
+      setFormData({ ...formData, reservation_time });
     } else {
-      console.log(event.value);
       setFormData({ ...formData, [event.name]: event.value });
     }
   }
 
   async function submitHandler(e) {
     e.preventDefault();
+    console.log(formData.reservation_time);
     const newErrors = getErrors(
       formData.reservation_date,
       formData.reservation_time
@@ -41,7 +46,7 @@ export default function NewReservation({ setDate }) {
     if (newErrors.length) {
       setErrors(newErrors);
     } else {
-      const response = await addReservation(formData);
+      const response = await updateReservation(formData);
       console.log(response.error);
       setDate(formData.reservation_date);
       history.push(`/reservations?date=${formData.reservation_date}`);
@@ -50,21 +55,20 @@ export default function NewReservation({ setDate }) {
 
   function handleCancel(e) {
     e.preventDefault();
-    setFormData({ ...defaultFormData });
     history.goBack();
   }
 
   return (
     <main>
       <div className="headerBar">
-        <h1>New Reservation</h1>
+        <h1>Edit Reservation</h1>
         <div className="d-md-flex mb-3">
-          <h4 className="mb-0">Book a new reservation below</h4>
+          <h4 className="mb-0">Edit an existing reservation</h4>
         </div>
       </div>
       <form className="resList form" onSubmit={submitHandler}>
         {getErrorComponent(errors)}
-        <h3>New Reservation</h3>
+        <h3>Reservation {reservation_id}</h3>
         <label>
           First Name:
           <input
@@ -106,6 +110,7 @@ export default function NewReservation({ setDate }) {
             type="date"
             id="reservationDate"
             name="reservation_date"
+            value={formData.reservation_date}
             onChange={onChangeHandler}
             required
           ></input>
@@ -138,7 +143,7 @@ export default function NewReservation({ setDate }) {
             Submit
           </button>
           <button className="btn btn-danger" onClick={handleCancel}>
-            Cancel
+            cancel
           </button>
         </div>
       </form>
