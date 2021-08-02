@@ -5,7 +5,7 @@ exports.up = function (knex) {
     table.string("last_name");
     table.string("mobile_number");
     table.date("reservation_date");
-    table.time("reservation_time", { precision: 6 });
+    table.time("reservation_time", { precision: 4 });
     table.string("status").defaultTo("booked");
     table.integer("people");
     table.timestamps(true, true);
