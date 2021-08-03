@@ -15,16 +15,20 @@ const app = express();
 app.use(morgan("combined"));
 app.use(cors());
 app.use(express.json());
+
+app.use("/reservations", reservationsRouter);
+app.use("/tables", tablesRouter);
+
 if (process.env.NODE_ENV === "production") {
+  app.use(
+    "/dashboard",
+    express.static(path.join(__dirname, "..", "..", "front-end", "build"))
+  );
   app.use(
     "/",
     express.static(path.join(__dirname, "..", "..", "front-end", "build"))
   );
 }
-
-app.use("/reservations", reservationsRouter);
-app.use("/tables", tablesRouter);
-
 app.use(notFound);
 app.use(errorHandler);
 
